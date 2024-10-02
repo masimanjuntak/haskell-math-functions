@@ -42,9 +42,9 @@ chebyshev :: (G.Vector v Double) =>
              Double      -- ^ Parameter of each function.
           -> v Double    -- ^ Coefficients of each polynomial term, in increasing order.
           -> Double
-chebyshev x a = fini . G.foldr' step (C 0 0) . G.tail $ a
+chebyshev x a = fini . G.foldr' step (C 0 0) . G.reverse . G.tail $ a
     where step k (C b0 b1) = C (k + x2 * b0 - b1) b0
-          fini   (C b0 b1) = G.head a + x * b0 - b1
+          fini   (C b0 b1) = (G.head a)/2 + x * b0 - b1
           x2               = x * 2
 {-# INLINE chebyshev #-}
 
@@ -59,7 +59,7 @@ chebyshevBroucke :: (G.Vector v Double) =>
              Double      -- ^ Parameter of each function.
           -> v Double    -- ^ Coefficients of each polynomial term, in increasing order.
           -> Double
-chebyshevBroucke x = fini . G.foldr' step (B 0 0 0)
+chebyshevBroucke x = fini . G.foldr' step (B 0 0 0) 
     where step k (B b0 b1 _) = B (k + x2 * b0 - b1) b0 b1
           fini   (B b0 _ b2) = (b0 - b2) * 0.5
           x2                 = x * 2
